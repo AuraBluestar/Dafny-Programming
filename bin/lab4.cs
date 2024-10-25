@@ -41,6 +41,16 @@ method test1()
   assert c2.contents == 13;
 }
 
+method incrementCounter(c: NaturalCounter?)
+  requires c != null ==> c.Valid()
+  modifies c
+  decreases c
+{
+  if c != null {
+    c.increment();
+  }
+}
+
 class Cell {
   var contents: int
 
@@ -149,6 +159,79 @@ class NaturalCounter {
     ensures Valid()
   {
     counter := counter - 1;
+  }
+}
+
+class Node {
+  var info: int
+  var next: Node?
+  ghost var footprint: set<Node>
+  ghost var contents: seq<int>
+
+  ghost predicate Valid()
+    reads this, footprint
+    decreases footprint
+  {
+    this in footprint &&
+    (next == null ==>
+      contents == [info]) &&
+    (next != null ==>
+      next in footprint &&
+      next.footprint < footprint &&
+      this !in next.footprint &&
+      contents == [info] + next.contents &&
+      next.Valid())
+  }
+
+  constructor (i: int)
+    ensures Valid()
+    ensures next == null
+    ensures footprint == {this}
+    ensures contents == [i]
+    decreases i
+  {
+    info := i;
+    next := null;
+    footprint := {this};
+    contents := [i];
+  }
+
+  method push_front(info: int) returns (result: Node)
+    requires this.Valid()
+    ensures result.Valid()
+    ensures result.contents == [info] + this.contents
+    ensures result.footprint == {result} + this.footprint
+    decreases info
+  {
+    result := new Node(info);
+    result.next := this;
+    result.footprint := {result} + this.footprint;
+    result.contents := [info] + this.contents;
+  }
+
+  method search(info: int) returns (result: Node?)
+    requires Valid()
+    ensures result == null || result.Valid()
+    ensures result != null ==> result.info == info
+    decreases info
+  {
+    var current := this;
+    ghost var remaining := |contents|;
+    while current != null
+      invariant current != null ==> current.Valid()
+      invariant remaining >= 0
+      invariant remaining == |if current != null then current.contents else []|
+      invariant current != null ==> current.footprint <= this.footprint
+      decreases remaining
+    {
+      if current.info == info {
+        result := current;
+        return;
+      }
+      current := current.next;
+      remaining := remaining - 1;
+    }
+    result := null;
   }
 }
 ")]
@@ -5843,6 +5926,12 @@ namespace _module {
       _1_c2 = _nw1;
       __default.setBoth(_0_c1, new BigInteger(10), _1_c2, new BigInteger(13));
     }
+    public static void incrementCounter(NaturalCounter c)
+    {
+      if ((c) != (object) ((NaturalCounter)null)) {
+        (c).increment();
+      }
+    }
   }
 
   public partial class Cell {
@@ -5922,6 +6011,44 @@ namespace _module {
     public void decrement()
     {
       (this).counter = (this.counter) - (BigInteger.One);
+    }
+  }
+
+  public partial class Node {
+    public Node() {
+      this.info = BigInteger.Zero;
+      this.next = ((Node)null);
+    }
+    public BigInteger info {get; set;}
+    public Node next {get; set;}
+    public void __ctor(BigInteger i)
+    {
+      (this).info = i;
+      (this).next = (Node)null;
+    }
+    public Node push__front(BigInteger info)
+    {
+      Node result = default(Node);
+      Node _nw0 = new Node();
+      _nw0.__ctor(info);
+      result = _nw0;
+      (result).next = this;
+      return result;
+    }
+    public Node search(BigInteger info)
+    {
+      Node result = ((Node)null);
+      Node _0_current;
+      _0_current = this;
+      while ((_0_current) != (object) ((Node)null)) {
+        if ((_0_current.info) == (info)) {
+          result = _0_current;
+          return result;
+        }
+        _0_current = _0_current.next;
+      }
+      result = (Node)null;
+      return result;
     }
   }
 } // end of namespace _module
