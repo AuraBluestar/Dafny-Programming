@@ -290,6 +290,7 @@ class Node1 extends Printable
     result := null;
   }
 
+
   method Print()
   {
     var current := this;
@@ -302,6 +303,57 @@ class Node1 extends Printable
       current := current.next;
     }
     print "\n";
+  }
+
+  //ex 7
+  method append(info : int)
+  requires Valid()
+  modifies footprint, contents, next
+  ensures Valid()
+  ensures contents == old(contents) + [info]
+{
+  var current := this;
+  var count := |footprint|; 
+
+  while current.next != null
+    invariant current.Valid()
+    invariant current in footprint
+    invariant count > 0
+    decreases count
+  {
+    current := current.next;
+    count := count - 1;
+  }
+
+  current.next := new Node1(info);
+  current.next.footprint := {current.next};
+  current.next.contents := [info];
+  
+  footprint := footprint + current.next.footprint;
+  contents := contents + [info];
+}
+
+//ex 8
+   method reverse()
+    requires Valid()
+    modifies next
+    ensures Valid()
+    ensures contents == old(contents)[..]
+  {
+    var prev: Node1? := null;
+    var current := this;
+    var next: Node1?;
+
+    while current != null
+      invariant current.Valid()
+      invariant prev == null || prev.Valid()
+      decreases |footprint - {current}|
+    {
+      next := current.next;
+      current.next := prev;
+      prev := current;
+      current := next;
+    }
   }
 }
 
@@ -378,10 +430,57 @@ class Cell1 extends Printable
   }
 }
 
-//ex 7
-
-
-
-//ex 8
-
 //ex 9
+
+class Stack extends Printable
+{
+  var top: Node1?;
+
+  ghost predicate Valid()
+    reads this, top
+  {
+    top == null || top.Valid()
+  }
+
+  constructor()
+    ensures Valid()
+    ensures top == null
+  {
+    top := null;
+  }
+
+  method push(info: int)
+    requires Valid()
+    modifies top
+    ensures Valid()
+  {
+    if top == null {
+      top := new Node1(info);
+    } else {
+      top := top.push_front(info);
+    }
+  }
+
+  method pop() returns (result: int?)
+    requires Valid()
+    modifies top
+    ensures Valid()
+    ensures top == null ==> result == null
+  {
+    if top == null {
+      result := null;
+    } else {
+      result := top.info;
+      top := top.next;
+    }
+  }
+
+  method Print()
+  {
+    if top == null {
+      print "Stack is empty\n";
+    } else {
+      top.Print();
+    }
+  }
+}
