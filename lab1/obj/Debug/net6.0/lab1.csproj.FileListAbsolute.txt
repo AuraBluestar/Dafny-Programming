@@ -1,0 +1,15 @@
+c:\Users\mirel\OneDrive\Desktop\FACULTATE\vdpd\obj\Debug\net6.0\lab1.csproj.AssemblyReference.cache
+c:\Users\mirel\OneDrive\Desktop\FACULTATE\vdpd\obj\Debug\net6.0\lab1.GeneratedMSBuildEditorConfig.editorconfig
+c:\Users\mirel\OneDrive\Desktop\FACULTATE\vdpd\obj\Debug\net6.0\lab1.AssemblyInfoInputs.cache
+c:\Users\mirel\OneDrive\Desktop\FACULTATE\vdpd\obj\Debug\net6.0\lab1.AssemblyInfo.cs
+c:\Users\mirel\OneDrive\Desktop\FACULTATE\vdpd\obj\Debug\net6.0\lab1.csproj.CoreCompileInputs.cache
+c:\Users\mirel\OneDrive\Desktop\FACULTATE\vdpd\obj\Debug\net6.0\lab1.dll
+c:\Users\mirel\OneDrive\Desktop\FACULTATE\vdpd\obj\Debug\net6.0\refint\lab1.dll
+c:\Users\mirel\OneDrive\Desktop\FACULTATE\vdpd\obj\Debug\net6.0\lab1.pdb
+c:\Users\mirel\OneDrive\Desktop\FACULTATE\vdpd\lab1.deps.json
+c:\Users\mirel\OneDrive\Desktop\FACULTATE\vdpd\lab1.dll
+c:\Users\mirel\OneDrive\Desktop\FACULTATE\vdpd\obj\Debug\net6.0\ref\lab1.dll
+c:\Users\mirel\OneDrive\Desktop\FACULTATE\vdpd\lab1.pdb
+c:\Users\mirel\OneDrive\Desktop\FACULTATE\vdpd\lab1.exe
+c:\Users\mirel\OneDrive\Desktop\FACULTATE\vdpd\obj\Debug\net6.0\lab1.genruntimeconfig.cache
+c:\Users\mirel\OneDrive\Desktop\FACULTATE\vdpd\lab1.runtimeconfig.json
