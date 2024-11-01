@@ -307,34 +307,34 @@ class Node1 extends Printable
 
   //ex 7
   method append(info : int)
-  requires Valid()
-  modifies footprint, contents, next
-  ensures Valid()
-  ensures contents == old(contents) + [info]
-{
-  var current := this;
-  var count := |footprint|; 
-
-  while current.next != null
-    invariant current.Valid()
-    invariant current in footprint
-    invariant count > 0
-    decreases count
+    requires Valid()
+    modifies footprint, contents, next
+    ensures Valid()
+    ensures contents == old(contents) + [info]
   {
-    current := current.next;
-    count := count - 1;
+    var current := this;
+    var count := |footprint|;
+
+    while current.next != null
+      invariant current.Valid()
+      invariant current in footprint
+      invariant count > 0
+      decreases count
+    {
+      current := current.next;
+      count := count - 1;
+    }
+
+    current.next := new Node1(info);
+    current.next.footprint := {current.next};
+    current.next.contents := [info];
+
+    footprint := footprint + current.next.footprint;
+    contents := contents + [info];
   }
 
-  current.next := new Node1(info);
-  current.next.footprint := {current.next};
-  current.next.contents := [info];
-  
-  footprint := footprint + current.next.footprint;
-  contents := contents + [info];
-}
-
-//ex 8
-   method reverse()
+  //ex 8
+  method reverse()
     requires Valid()
     modifies next
     ensures Valid()
@@ -433,7 +433,7 @@ class Cell1 extends Printable
 //ex 9
 
 class Stack extends Printable
-{
+  {
   var top: Node1?;
 
   ghost predicate Valid()
