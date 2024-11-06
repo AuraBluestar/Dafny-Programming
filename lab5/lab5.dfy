@@ -86,7 +86,7 @@ lemma equivalenceFib(n: int)
 }
 
 // ex 4
-type BST(0) 
+type BST(0)
 
 ghost const Leaf : BST
 
@@ -103,8 +103,8 @@ lemma bst_total(t: BST)
   ensures t == Leaf || exists n: int, l: BST, r: BST :: t == Node(n, l, r)
 
 lemma inductionBST(P: BST -> bool)
-  requires P(Leaf) 
-  requires forall n: int, l: BST, r: BST :: P(l) && P(r) ==> P(Node(n, l, r)) 
+  requires P(Leaf)
+  requires forall n: int, l: BST, r: BST :: P(l) && P(r) ==> P(Node(n, l, r))
   ensures forall t: BST :: P(t)
 
 ghost function IsLeaf(t: BST) : bool
@@ -126,7 +126,7 @@ ghost function GetRight(t: BST) : BST
   requires IsNode(t)
 
 lemma node_accessors(n: int, l: BST, r: BST)
-  ensures IsNode(Node(n, l, r)) 
+  ensures IsNode(Node(n, l, r))
   ensures GetValue(Node(n, l, r)) == n
   ensures GetLeft(Node(n, l, r)) == l
   ensures GetRight(Node(n, l, r)) == r
@@ -139,23 +139,23 @@ predicate isDivisorFunctional(x: int, y: int)
   y % x == 0
 }
 predicate isDivisorQuantified(x: int, y: int)
-    requires x>1 && y>1
+  requires x>1 && y>1
 {
-    exists k: int :: 0 <= k <= y && y == x * k
+  exists k: int :: 0 <= k <= y && y == x * k
 }
 
 //ex 6
 ghost predicate isGCD(d: int, a: int, b: int)
-    requires a >= 0 && b >= 0
+  requires a >= 0 && b >= 0
 {
-    if a == 0 && b == 0 then
-        d == 0
-    else
-        d > 0 &&
-        exists k1: int :: k1 >= 0 && a == d * k1 &&
-        exists k2: int :: k2 >= 0 && b == d * k2 &&
-        forall e: int ::
-            (e > 0 && exists k3: int :: (k3 >= 0 && a == e * k3) && exists k4: int :: (k4 >= 0 && b == e * k4)) ==> (e <= d)
+  if a == 0 && b == 0 then
+    d == 0
+  else
+    d > 0 &&
+    exists k1: int :: k1 >= 0 && a == d * k1 &&
+                      exists k2: int :: k2 >= 0 && b == d * k2 &&
+                                        forall e: int ::
+                                          (e > 0 && exists k3: int :: (k3 >= 0 && a == e * k3) && exists k4: int :: (k4 >= 0 && b == e * k4)) ==> (e <= d)
 }
 
 //ex 7
