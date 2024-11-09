@@ -316,6 +316,12 @@ lemma even_even'_universal()
   }
 }
 
+lemma odd_odd''(n : int)
+	ensures isOdd(n) <==> isOdd''(n)
+{
+	odd_odd''_universal();
+}
+
 
 lemma odd_odd'_universal()
   ensures forall n :: isOdd(n) <==> isOdd'(n)
@@ -333,35 +339,62 @@ lemma odd_odd'_universal()
   }
 }
 
+///////////////
+
 lemma odd_odd''_universal()
   ensures forall n :: isOdd(n) <==> isOdd''(n)
 {
-  forall n | true
-    ensures isOdd(n) <==> isOdd''(n) {
-    if isOdd(n) {
-      assert isOdd''(n);
-    }
-    if (isOdd''(n)) {
-      assert !isEven(n);
-      assert n % 2 == 1;
-      assert n == 2 * (n / 2) + 1;
-      assert isOdd(n);
-    }
-  }
+  forall n | isOdd''(n)
+		ensures isOdd(n)
+	{
+		even_even'_universal();
+		odd_odd'_universal();
+	}
 }
 
 lemma even_square_even(n : nat)
   requires isEven(n * n)
   ensures isEven(n)
 {
-  assume false; // TODO
+  if !isEven(n) {
+		odd_odd''_universal();
+		assert isOdd(n);
+		var q: int :| 2 * q + 1 == n;
+		calc{
+			n * n;
+				==
+			(2 * q + 1) * (2 * q + 1);
+				==
+			4 * q * q + 2 * q + 2 * q + 1;
+				==
+			4 * q * q + 4 * q + 1;
+				==
+			2 * (2 * q * q + 2 * q) + 1;
+		}
+  }
 }
 
 lemma odd_square_odd(n : nat)
   requires isOdd(n * n)
   ensures isOdd(n)
 {
-  assume false; // TODO
+  if !isOdd(n) {
+		odd_odd''(n);
+		assert isEven(n);
+		var q: int :| n == q * 2;
+		calc{
+			n * n;
+				==
+			q * 2 * q * 2;
+				==
+			(2 * q * q) * 2;
+		}
+		assert exists qs: int :: n * n == qs * 2;
+		assert isEven(n * n); 
+		odd_odd''(n * n);
+		assert !isOdd(n * n);
+		assert false;
+	}
 }
 
 lemma even_n_times_n_1(n : nat)
